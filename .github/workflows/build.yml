@@ -25,7 +25,8 @@ jobs:
           mkdir -p temp_build bundles
           paperback bundle
           touch bundles/.nojekyll
-          cp -f bundles/v0.8/versioning.json bundles/versioning.json || true
+          cp -rf bundles/v0.8/* bundles/ || true
+          cp -rf bundles/v0.9/* bundles/ || true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
