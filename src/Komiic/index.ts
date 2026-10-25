@@ -1,12 +1,9 @@
 import {
     Source,
-    Manga,
     Chapter,
     SearchRequest,
     PagedResults,
     SourceManga,
-    Request,
-    Response,
     LanguageCode,
     MangaStatus,
     RequestManager
@@ -24,7 +21,7 @@ export class KomiicSource extends Source {
         return createSourceManga({
             id: mangaId,
             mangaInfo: createMangaInfo({
-                title: 'Komiic Manga',
+                titles: ['Komiic Manga'],
                 image: 'https://komiic.com/favicon.ico',
                 status: MangaStatus.ONGOING
             })
@@ -101,7 +98,7 @@ export class KomiicSource extends Source {
                     id: chap.id,
                     mangaId: mangaId,
                     chapNum: parseFloat(chap.serial) || 0,
-                    langCode: LanguageCode.CHINESE_TRADITIONAL
+                    langCode: LanguageCode.CHINESE
                 })
             )
         }
