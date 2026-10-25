@@ -1,0 +1,9 @@
+{
+  "name": "Komiic",
+  "author": "feifhuh",
+  "version": "1.0.0",
+  "description": "Komiic Extension",
+  "contentRating": "EVERYONE",
+  "icon": "icon.png",
+  "websiteBaseURL": "https://komiic.com"
+}
