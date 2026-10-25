@@ -24,6 +24,7 @@ jobs:
           npm install paperback-extensions-common typescript@4.9.5
           mkdir -p temp_build bundles
           paperback bundle
+          touch bundles/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
