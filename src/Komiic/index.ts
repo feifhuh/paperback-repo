@@ -98,7 +98,7 @@ export class KomiicSource extends Source {
                     id: chap.id,
                     mangaId: mangaId,
                     chapNum: parseFloat(chap.serial) || 0,
-                    langCode: LanguageCode.CHINESE
+                    langCode: LanguageCode.CHINEESE
                 })
             )
         }
