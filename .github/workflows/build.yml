@@ -25,8 +25,13 @@ jobs:
           mkdir -p temp_build bundles
           paperback bundle
           touch bundles/.nojekyll
-          cp -rf bundles/v0.8/* bundles/ || true
-          cp -rf bundles/v0.9/* bundles/ || true
+          
+          # 將子目錄的清單複製到根目錄，確保 App 抓得到
+          if [ -d "bundles/v0.8" ]; then
+            cp -rf bundles/v0.8/* bundles/
+          elif [ -d "bundles/v0.9" ]; then
+            cp -rf bundles/v0.9/* bundles/
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
