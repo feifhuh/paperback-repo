@@ -2,17 +2,34 @@ import {
     Source,
     Manga,
     Chapter,
-    Page,
     SearchRequest,
     PagedResults,
     SourceManga,
     Request,
-    Response
+    Response,
+    LanguageCode,
+    MangaStatus,
+    RequestManager
 } from 'paperback-extensions-common'
 
 export class KomiicSource extends Source {
-    private baseUrl = 'https://komiic.com'
+    requestManager: RequestManager = createRequestManager({
+        requestsPerSecond: 3,
+        requestTimeout: 15000
+    })
+
     private apiUrl = 'https://komiic.com/api/query'
+
+    async getMangaDetails(mangaId: string): Promise<SourceManga> {
+        return createSourceManga({
+            id: mangaId,
+            mangaInfo: createMangaInfo({
+                title: 'Komiic Manga',
+                image: 'https://komiic.com/favicon.ico',
+                status: MangaStatus.ONGOING
+            })
+        })
+    }
 
     async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
         const searchTitle = query.title ?? ''
@@ -39,22 +56,19 @@ export class KomiicSource extends Source {
 
         const response = await this.requestManager.schedule(request, 1)
         const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
-        const mangas: SourceManga[] = []
+        const tiles: any[] = []
 
         for (const item of json.data?.mangaByTitle || []) {
-            mangas.push(
-                createSourceManga({
+            tiles.push(
+                createMangaTile({
                     id: item.id,
-                    mangaInfo: createMangaInfo({
-                        title: item.title,
-                        image: item.cover,
-                        status: 'Ongoing'
-                    })
+                    title: createIconText({ text: item.title }),
+                    image: item.cover
                 })
             )
         }
 
-        return createPagedResults({ results: mangas })
+        return createPagedResults({ results: tiles })
     }
 
     async getChapters(mangaId: string): Promise<Chapter[]> {
@@ -64,7 +78,6 @@ export class KomiicSource extends Source {
                     chaptersByMangaId(mangaId: $mangaId) {
                         id
                         serial
-                        size
                     }
                 }
             `,
@@ -88,7 +101,7 @@ export class KomiicSource extends Source {
                     id: chap.id,
                     mangaId: mangaId,
                     chapNum: parseFloat(chap.serial) || 0,
-                    langCode: 'zh-hant'
+                    langCode: LanguageCode.CHINESE_TRADITIONAL
                 })
             )
         }
@@ -96,14 +109,12 @@ export class KomiicSource extends Source {
         return chapters
     }
 
-    async getPageDetails(mangaId: string, chapterId: string): Promise<Page[]> {
+    async getChapterDetails(mangaId: string, chapterId: string): Promise<any> {
         const gqlQuery = {
             query: `
                 query getImages($chapterId: ID!) {
                     imagesByChapterId(chapterId: $chapterId) {
                         kid
-                        height
-                        width
                     }
                 }
             `,
@@ -119,19 +130,17 @@ export class KomiicSource extends Source {
 
         const response = await this.requestManager.schedule(request, 1)
         const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
-        const pages: Page[] = []
+        const pages: string[] = []
 
-        let index = 0
         for (const img of json.data?.imagesByChapterId || []) {
-            const imageUrl = `https://cdn.komiic.com/images/${img.kid}`
-            pages.push(
-                createPage({
-                    id: String(index++),
-                    imageUrl: imageUrl
-                })
-            )
+            pages.push(`https://cdn.komiic.com/images/${img.kid}`)
         }
 
-        return pages
+        return createChapterDetails({
+            id: chapterId,
+            mangaId: mangaId,
+            pages: pages,
+            longStrip: false
+        })
     }
 }
