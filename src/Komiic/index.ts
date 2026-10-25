@@ -6,10 +6,21 @@ import {
     SourceManga,
     LanguageCode,
     MangaStatus,
-    RequestManager
+    RequestManager,
+    SourceInfo
 } from 'paperback-extensions-common'
 
-export class KomiicSource extends Source {
+export const KomiicInfo: SourceInfo = {
+    version: '1.0.0',
+    name: 'Komiic',
+    icon: 'icon.png',
+    author: 'feifhuh',
+    description: 'Extension for Komiic',
+    contentRating: 'EVERYONE',
+    websiteBaseURL: 'https://komiic.com'
+}
+
+export class Komiic extends Source {
     requestManager: RequestManager = createRequestManager({
         requestsPerSecond: 3,
         requestTimeout: 15000
@@ -98,7 +109,7 @@ export class KomiicSource extends Source {
                     id: chap.id,
                     mangaId: mangaId,
                     chapNum: parseFloat(chap.serial) || 0,
-                    langCode: LanguageCode.CHINEESE
+                    langCode: LanguageCode.CHINESE
                 })
             )
         }
