@@ -12,7 +12,8 @@
       "author": "feifhuh",
       "desc": "Komiic Manga Extension",
       "website": "https://komiic.com",
-      "version": "1.0.0", "icon": "https://komiic.com/favicon.ico"
+      "version": "1.0.0",
+      "icon": "https://komiic.com/favicon.ico"
     }
   ]
 }
