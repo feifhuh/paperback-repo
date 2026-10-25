@@ -4,20 +4,5 @@
     "description": "Custom Paperback extensions repository",
     "website": "https://feifhuh.github.io/paperback-repo/",
     "logo": "https://komiic.com/favicon.ico"
-  },
-  "sources": [
-    {
-      "id": "Komiic",
-      "name": "Komiic",
-      "author": "feifhuh",
-      "desc": "Komiic Manga Extension",
-      "website": "https://komiic.com",
-      "version": "1.0.0",
-      "icon": "https://komiic.com/favicon.ico",
-      "tags": []
-    }
-  ],
-  "content": [
-    "Komiic"
-  ]
+  }
 }
