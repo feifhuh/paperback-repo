@@ -4,19 +4,25 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install & Build
+
+      - name: Build Repository
         run: |
           npm init -y
-          npm install -g @paperback/cli
-          paperback-cli build
+          npm install @paperback/cli typescript
+          npx paperback-cli build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
