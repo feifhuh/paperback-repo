@@ -20,13 +20,15 @@ jobs:
       - name: Build Repository
         run: |
           npm init -y
-          npm install -g paperback-cli
+          npm install -g paperback-cli@0.8.0-alpha.4
           npm install paperback-extensions-common typescript@4.9.5
-          mkdir -p temp_build bundles
-          paperback bundle
-          touch bundles/.nojekyll
+          mkdir -p bundles
           
-          # 將子目錄的清單複製到根目錄，確保 App 抓得到
+          # 直接使用內建的 CLI 打包命令
+          npx paperback bundle -o bundles
+          touch bundles/.nojekyll
+
+          # 自動將 v0.8 / v0.9 目錄內容展開至根目錄
           if [ -d "bundles/v0.8" ]; then
             cp -rf bundles/v0.8/* bundles/
           elif [ -d "bundles/v0.9" ]; then
