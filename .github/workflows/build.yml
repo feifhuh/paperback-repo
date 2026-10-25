@@ -20,9 +20,10 @@ jobs:
       - name: Build Repository
         run: |
           npm init -y
-          npm install paperback-cli typescript @paperback/types
+          npm install -g paperback-cli typescript
+          npm install @paperback/types
           mkdir -p temp_build bundles
-          npx paperback-cli bundle
+          paperback bundle
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
