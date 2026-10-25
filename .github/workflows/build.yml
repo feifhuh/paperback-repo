@@ -20,8 +20,8 @@ jobs:
       - name: Build Repository
         run: |
           npm init -y
-          npm install -g paperback-cli typescript@4.9.5
-          npm install @paperback/types
+          npm install -g paperback-cli
+          npm install paperback-extensions-common typescript@4.9.5
           mkdir -p temp_build bundles
           paperback bundle
 
