@@ -17,22 +17,24 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build Repository
+      - name: Build Extensions
         run: |
           npm init -y
           npm install -g paperback-cli
           npm install paperback-extensions-common typescript@4.9.5
           
-          # 強制以根目錄進行完整打包
-          paperback bundle -b .
+          # 執行純粹打包，不帶非法參數
+          paperback bundle
           
-          # 建立部署目錄並處理檔案複製
+          # 建立輸出目錄並將生成的套件檔案複製進去
           mkdir -p bundles
           touch bundles/.nojekyll
           
-          # 將所有生成的檔案同步轉移到 bundles 輸出目錄
           if [ -d "v0.8" ]; then
             cp -rf v0.8/* bundles/
+          fi
+          if [ -d "v0.9" ]; then
+            cp -rf v0.9/* bundles/
           fi
           if [ -d "bundles/v0.8" ]; then
             cp -rf bundles/v0.8/* bundles/
