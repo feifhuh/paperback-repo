@@ -20,7 +20,8 @@ jobs:
       - name: Build Repository
         run: |
           npm init -y
-          npm install paperback-cli typescript
+          npm install paperback-cli typescript @paperback/types
+          mkdir -p temp_build bundles
           npx paperback-cli bundle
 
       - name: Deploy to GitHub Pages
