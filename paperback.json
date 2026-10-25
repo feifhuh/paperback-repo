@@ -1,7 +1,18 @@
 {
-  "name": "My Paperback Repo",
-  "description": "Custom Paperback extensions repository",
-  "author": "feifhuh",
-  "email": "your-email@example.com",
-  "website": "https://github.com/feifhuh/paperback-repo"
+  "repository": {
+    "name": "My Paperback Repo",
+    "description": "Custom Paperback extensions repository",
+    "website": "https://feifhuh.github.io/paperback-repo/",
+    "logo": "https://komiic.com/favicon.ico"
+  },
+  "extensions": [
+    {
+      "id": "Komiic",
+      "name": "Komiic",
+      "author": "feifhuh",
+      "desc": "Komiic Manga Extension",
+      "website": "https://komiic.com",
+      "version": "1.0.0", "icon": "https://komiic.com/favicon.ico"
+    }
+  ]
 }
