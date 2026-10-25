@@ -3,22 +3,20 @@ import {
     Manga,
     Chapter,
     Page,
+    SearchRequest,
+    PagedResults,
     SourceManga,
     Request,
-    Response,
-    SearchRequest,
-    PagedResults
-} from '@paperback/types'
+    Response
+} from 'paperback-extensions-common'
 
 export class KomiicSource extends Source {
     private baseUrl = 'https://komiic.com'
     private apiUrl = 'https://komiic.com/api/query'
 
-    // 1. 搜尋漫畫 (Search Manga)
     async getSearchResults(query: SearchRequest, metadata: any): Promise<PagedResults> {
         const searchTitle = query.title ?? ''
         
-        // GraphQL 查詢語法（原理跟 Python requests.post 一模一樣）
         const gqlQuery = {
             query: `
                 query searchManga($title: String!) {
@@ -32,21 +30,21 @@ export class KomiicSource extends Source {
             variables: { title: searchTitle }
         }
 
-        const request: Request = {
+        const request = createRequestObject({
             url: this.apiUrl,
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify(gqlQuery)
-        }
+        })
 
         const response = await this.requestManager.schedule(request, 1)
-        const json = JSON.parse(response.data)
+        const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
         const mangas: SourceManga[] = []
 
-        for (const item of json.data.mangaByTitle || []) {
+        for (const item of json.data?.mangaByTitle || []) {
             mangas.push(
                 createSourceManga({
-                    mangaId: item.id,
+                    id: item.id,
                     mangaInfo: createMangaInfo({
                         title: item.title,
                         image: item.cover,
@@ -59,7 +57,6 @@ export class KomiicSource extends Source {
         return createPagedResults({ results: mangas })
     }
 
-    // 2. 抓取漫畫章節 (Get Chapters)
     async getChapters(mangaId: string): Promise<Chapter[]> {
         const gqlQuery = {
             query: `
@@ -74,18 +71,18 @@ export class KomiicSource extends Source {
             variables: { mangaId }
         }
 
-        const request: Request = {
+        const request = createRequestObject({
             url: this.apiUrl,
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify(gqlQuery)
-        }
+        })
 
         const response = await this.requestManager.schedule(request, 1)
-        const json = JSON.parse(response.data)
+        const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
         const chapters: Chapter[] = []
 
-        for (const chap of json.data.chaptersByMangaId || []) {
+        for (const chap of json.data?.chaptersByMangaId || []) {
             chapters.push(
                 createChapter({
                     id: chap.id,
@@ -99,7 +96,6 @@ export class KomiicSource extends Source {
         return chapters
     }
 
-    // 3. 抓取章節內的圖片 (Get Chapter Pages)
     async getPageDetails(mangaId: string, chapterId: string): Promise<Page[]> {
         const gqlQuery = {
             query: `
@@ -114,20 +110,19 @@ export class KomiicSource extends Source {
             variables: { chapterId }
         }
 
-        const request: Request = {
+        const request = createRequestObject({
             url: this.apiUrl,
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             data: JSON.stringify(gqlQuery)
-        }
+        })
 
         const response = await this.requestManager.schedule(request, 1)
-        const json = JSON.parse(response.data)
+        const json = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
         const pages: Page[] = []
 
         let index = 0
-        for (const img of json.data.imagesByChapterId || []) {
-            // Komiic 的圖片 CDN 網址建構
+        for (const img of json.data?.imagesByChapterId || []) {
             const imageUrl = `https://cdn.komiic.com/images/${img.kid}`
             pages.push(
                 createPage({
