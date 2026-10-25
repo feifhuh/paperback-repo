@@ -1,0 +1,13 @@
+{
+  "name": "paperback-repo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "paperback bundle"
+  },
+  "devDependencies": {
+    "paperback-cli": "^0.8.0-alpha.4",
+    "paperback-extensions-common": "^5.0.0-alpha.7",
+    "typescript": "^4.9.5"
+  }
+}
