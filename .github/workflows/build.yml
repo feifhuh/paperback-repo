@@ -17,22 +17,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build Extensions
+      - name: Install and Build
         run: |
-          npm init -y
-          npm install -g paperback-cli
-          npm install paperback-extensions-common typescript@4.9.5
-          paperback bundle
+          npm install
+          npx paperback bundle
           
-          # 將生成的 versioning.json 與套件複製到 bundles 目錄
           mkdir -p bundles
           touch bundles/.nojekyll
           
           if [ -d "bundles/v0.8" ]; then
             cp -rf bundles/v0.8/* bundles/
-          fi
-          
-          if [ -d "v0.8" ]; then
+          elif [ -d "v0.8" ]; then
             cp -rf v0.8/* bundles/
           fi
 
